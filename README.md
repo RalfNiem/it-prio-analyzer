@@ -1,44 +1,68 @@
-# it-prio-analyzer
+# it-prio-analyzer 🚀
 
-A data processing (ETL) tool designed to transform IT demand and budget planning data into a structured star schema for deep analysis and visualization.
+Ein hochentwickeltes ETL-Tool (Extract, Transform, Load), das IT-Bedarfs- und Budgetplanungsdaten aus komplexen Excel-CSV-Exporten in ein sauberes, relationales **Star-Schema** transformiert. Optimiert für die Analyse in Power BI, Tableau oder Excel.
 
-## Overview
+## 🌟 Kern-Features
 
-This project was developed to bridge the gap between high-level annual planning ("Top-Down") and concrete quarterly project execution ("Bottom-Up"). It automates the extraction and cleaning of planning data from CSV exports, allowing for interactive analysis of budget allocations across strategic "Rocks", Business Initiatives, and IT Domains.
+- **Konfigurationsgetriebene Engine:** Neue Datenquellen (z. B. Q3-Plan) können ohne Code-Änderung über einfache JSON-Dateien hinzugefügt werden.
+- **Smart Data Parsing:**
+    - Automatische Erkennung von deutschen vs. US-Zahlenformaten (Komma vs. Punkt).
+    - Korrekte Behandlung von Tausender-Trennzeichen (verhindert den 1000er-Fehler).
+    - Umrechnung verschiedener Einheiten (€ vs. k€) pro Quelle.
+- **Dynamische Header-Erkennung:** Findet die Tabellen-Kopfzeile automatisch anhand von Anker-Begriffen, unabhängig von Leerzeilen im Export.
+- **Jira-Integration:** Reichert Initiativen automatisch mit offiziellen Titeln aus einer lokalen Jira-SQLite-Datenbank an.
+- **Automatisierte Bereinigung:** 
+    - Verwandelt unstrukturierte Jira-Link-Listen in saubere, kommagetrennte Strings.
+    - Aggregiert Duplikate und berechnet komplexe Validierungs-Summen (Differenzen/Summen) on-the-fly.
 
-## Key Features
+## 🏗️ Projektstruktur
 
-- **Data Normalization:** Converts varying budget units (Euro to kEuro) and handles multiple thousands/decimal separators.
-- **Dimensional Modeling:** Produces clean CSV outputs (`fact_plan_budget.csv`, `dim_initiative.csv`, etc.) for use in Excel, Power BI, or Python.
-- **Semantic Mapping:** Links Jira keys and project descriptions between annual and quarterly planning masters.
-- **Robust Processing:** Fuzzy-matching for complex/merged Excel-to-CSV headers and automatic aggregation of duplicate budget entries.
+```text
+├── budget_model_builder_dynamic.py  # Die zentrale ETL-Engine
+├── configs/                         # Gesamte Steuerungslogik
+│   ├── global.json                  # Domänen, Jira-DB Pfad & Globale Regeln
+│   └── plans/                       # Quell-spezifische Konfigurationen
+│       ├── q2_plan.json             # Regeln für den Quartalsmaster Q2
+│       └── annual_2026.json         # Regeln für den Jahres-Demandmaster
+├── out/                             # Das fertige Datenmodell (Star-Schema)
+├── docs/                            # Technische Dokumentation & Architektur
+├── verify_data.py                   # Test-Suite zur Validierung der Datenqualität
+└── *.csv                            # Quelldateien (Eingabe)
+```
 
-## Project Structure
+## 🚀 Inbetriebnahme
 
-- `budget_model_builder.py`: The main Python script (ETL process).
-- `GEMINI.md`: Contextual documentation for AI-assisted development.
-- `out/`: Contains the generated dimensional star schema files.
-
-## Getting Started
-
-### Prerequisites
+### Voraussetzungen
 - Python 3.8+
-- Pandas
+- Pandas (`pip install pandas`)
 
-### Installation
-1. Clone the repository.
-2. Ensure you have the input files (`Quartalsmaster_Q2.csv` and `B2B-Demandmaster_2026.csv`) in the root directory.
-3. Run the analysis:
-   ```bash
-   python budget_model_builder.py
-   ```
+### ETL-Prozess ausführen
+Das Skript liest automatisch alle Konfigurationen im Ordner `configs/plans/` ein und verarbeitet die zugehörigen CSV-Dateien:
+```bash
+python3 budget_model_builder_dynamic.py
+```
 
-## Output Schema
-The tool generates four main tables in the `out/` folder:
-1. **dim_rock:** Strategic initiatives (Rocks).
-2. **dim_domain:** IT Domain teams (e.g., Salesforce, Service Now, AI).
-3. **dim_initiative:** Detailed initiatives with descriptions and Jira keys.
-4. **fact_plan_budget:** Fact table with all budget values, plan sources (annual vs. quarterly), and time periods.
+### Daten validieren
+Um sicherzustellen, dass die Konvertierung (insb. Tausenderpunkte und Aggregate) korrekt erfolgt ist:
+```bash
+python3 verify_data.py
+```
 
-## License
-MIT
+## 📂 Das Datenmodell (Output)
+
+Die Dateien im Ordner `out/` bilden ein klassisches Star-Schema:
+
+1.  **`dim_rock.csv`**: Die oberste strategische Ebene (Rocks).
+2.  **`dim_domain.csv`**: Die IT-Domänen und Teams (SFC, CPQ, etc.) sowie künstliche Aggregate.
+3.  **`dim_initiative.csv`**: Alle Business-Initiativen mit harmonisierten Namen, offiziellen Jira-Titeln und bereinigten Link-Listen.
+4.  **`fact_plan_budget.csv`**: Die zentrale Faktentabelle mit allen Budgetwerten, verknüpft über IDs mit den Dimensionen.
+
+## 🛠️ Erweiterung (z. B. Q3 hinzufügen)
+
+Um eine neue Datei hinzuzufügen, muss **kein Python-Code** angepasst werden:
+1. Erstelle eine neue Datei `configs/plans/q3_plan.json`.
+2. Definiere darin den `file_path`, die `period` und das Spalten-Mapping (analog zu `q2_plan.json`).
+3. Starte die Engine erneut.
+
+## 📜 Lizenz
+Dieses Projekt ist für den internen Gebrauch bei der Deutschen Telekom AG optimiert.

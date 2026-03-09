@@ -1,0 +1,26 @@
+{
+  "plan_id": "annual_2026",
+  "period": "2026",
+  "file_path": "B2B-Demandmaster_2026.csv",
+  "anchors": ["Budget", "Rock", "Jira"],
+  "unit_factor": 1.0,
+  "ignore_columns": [
+    "total_q1q4_costs_b2b_coe",
+    "q1_costs_b2b_coe",
+    "q2_costs_b2b_coe",
+    "q3_costs_b2b_coe",
+    "q4_costs_b2b_coe"
+  ],
+  "mapping": {
+    "budgetschlssel": "id_budget",
+    "rock": "rock_name",
+    "business_initiative_cluster": "business_initiative_cluster",
+    "business_initiative_epic": "description_annual",
+    "jiralink": "jira_initiative_link",
+    "alignment_team": "alignment_team",
+    "total_cost_wo_erp_trafo_data": "B2B_DELIVERY_GESAMT",
+    "total_wo_data_erp_trafo": "TOTAL_WO_DATA_ERP_TRAFO",
+    "total_cost_b2b_internal": "B2B_DELIVERY_COE"
+  },
+  "fuzzy_meta_threshold": 8
+}
