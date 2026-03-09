@@ -21,7 +21,7 @@
     "jiralink_initiative_prioroadmap": "jira_initiative_link",
     "jiralink_businessepic_fr_q2": "jira_epic_link",
     "business_epic_q2_title": "jira_epic_title",
-    "prio_q2": "prio_q2",
+    "prio_q21": "prio_q2",
     "alignmentteam": "alignment_team"
   },
   "fuzzy_meta_threshold": 8
