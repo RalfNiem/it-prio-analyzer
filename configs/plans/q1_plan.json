@@ -1,0 +1,31 @@
+{
+  "plan_id": "q1_plan",
+  "period": "2026-Q1",
+  "file_path": "Quartalsmaster Q1.csv",
+  "anchors": ["Rocks", "JIRA"],
+  "unit_factor": 1.0,
+  "is_status_plan": true,
+  "ignore_columns": [
+    "strategic_focus", 
+    "angemeldetes_jahresbudget", 
+    "bemerkungen", 
+    "multidomain", 
+    "remarks_swapnil_indivar_2502", 
+    "likely_involved_coes", 
+    "q1_stage",
+    "kandidat_fr_q1_x",
+    "value_stream"
+  ],
+  "mapping": {
+    "budgetschlssel": "id_budget",
+    "rocks": "rock_name",
+    "objective_strategisches_ziel": "objective",
+    "jira_business_initiative_beschreibung": "jira_initiative_title",
+    "jiralink_initiative": "jira_initiative_link",
+    "jiralink_businessepic_fr_q1": "jira_epic_link",
+    "business_epic_q1_title": "jira_epic_title",
+    "prio_q1": "prio_q1",
+    "alignmentteam": "alignment_team"
+  },
+  "fuzzy_meta_threshold": 8
+}

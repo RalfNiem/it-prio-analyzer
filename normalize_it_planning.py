@@ -37,6 +37,10 @@ from typing import Dict, Iterable, List, Optional, Tuple
 
 import pandas as pd
 
+# Default location of the source CSV exports, resolved relative to this script so
+# the ETL works regardless of the current working directory.
+INPUT_DIR = Path(__file__).resolve().parent / "input"
+
 
 EMPTY_TOKENS = {"", "nan", "none", "null", "-", "–", "\xa0"}
 
@@ -96,6 +100,7 @@ ANNUAL_DOMAIN_HEADER_MAP = {
 
 AGGREGATE_MEASURE_MAP = {
     "Summe \n(nur B2B-COEs)": "VALIDATED_B2B_COE_SUM",
+    "Summe COEs": "VALIDATED_B2B_COE_SUM",
     "angemeldetes Jahresbudget": "REGISTERED_ANNUAL_BUDGET",
     "Total\nQ1-Q4\nCosts B2B\nCOE": "TOTAL_Q1_Q4_COSTS_B2B_COE",
     "Q1\nCosts B2B\nCOE": "Q1_COSTS_B2B_COE",
@@ -529,6 +534,10 @@ def extract_q1(path: Path) -> Tuple[List[Dict[str, object]], List[Dict[str, obje
             remarks=row.get("Bemerkungen"),
             legacy_bemabu_number=row.get("Alte BEMABU-Nummer"),
         )
+        # Skip rows without any identifying field (no budget key, Jira link, name
+        # or epic) — consistent with extract_annual, avoids phantom fallback keys.
+        if str(source_row["initiative_business_key"]).startswith("row:"):
+            continue
         row_records.append(source_row)
 
         for col in domain_cols:
@@ -604,6 +613,10 @@ def extract_q2(path: Path) -> Tuple[List[Dict[str, object]], List[Dict[str, obje
             remarks_secondary=row.get("Remarks (Swapnil & Indivar) - 25/02"),
             likely_involved_coes=row.get("Likely Involved CoEs"),
         )
+        # Skip rows without any identifying field (no budget key, Jira link, name
+        # or epic) — consistent with extract_annual, avoids phantom fallback keys.
+        if str(source_row["initiative_business_key"]).startswith("row:"):
+            continue
         row_records.append(source_row)
 
         for col in domain_cols:
@@ -710,7 +723,7 @@ def extract_annual(path: Path) -> Tuple[List[Dict[str, object]], List[Dict[str, 
 
         for col in domain_cols:
             raw_value = clean_str(row.get(col))
-            amount = parse_number(raw_value, multiplier=1000.0)
+            amount = parse_number(raw_value, multiplier=1.0)
             if amount is None:
                 continue
             budget_facts.append(
@@ -729,7 +742,7 @@ def extract_annual(path: Path) -> Tuple[List[Dict[str, object]], List[Dict[str, 
 
         for col in aggregate_cols:
             raw_value = clean_str(row.get(col))
-            amount = parse_number(raw_value, multiplier=1000.0)
+            amount = parse_number(raw_value, multiplier=1.0)
             if amount is None:
                 continue
             budget_facts.append(
@@ -780,6 +793,10 @@ def extract_q3(path: Path) -> Tuple[List[Dict[str, object]], List[Dict[str, obje
             remarks=row.get("Bemerkungen"),
             reference_initiative=row.get("Predecessor BE in Q2\n(optional)"),
         )
+        # Skip rows without any identifying field (no budget key, Jira link, name
+        # or epic) — consistent with extract_annual, avoids phantom fallback keys.
+        if str(source_row["initiative_business_key"]).startswith("row:"):
+            continue
         row_records.append(source_row)
 
         for col in domain_cols:
@@ -818,7 +835,7 @@ def extract_q3(path: Path) -> Tuple[List[Dict[str, object]], List[Dict[str, obje
                     }
                 )
 
-        for col in ["Summe \n(nur B2B-COEs)", "angemeldetes Jahresbudget"]:
+        for col in ["Summe COEs", "Summe \n(nur B2B-COEs)", "angemeldetes Jahresbudget"]:
             raw_value = clean_str(row.get(col))
             amount = parse_number(raw_value, multiplier=1.0)
             if amount is None:
@@ -1137,10 +1154,10 @@ def export_model(model: Dict[str, pd.DataFrame], out_dir: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Normalize IT planning CSV exports into a stable dimensional model.")
-    parser.add_argument("--q1", type=Path, default=Path("Quartalsmaster Q1.csv"), help="Path to Quartalsmaster Q1 CSV")
-    parser.add_argument("--q2", type=Path, default=Path("Quartalsmaster Q2.csv"), help="Path to Quartalsmaster Q2 CSV")
-    parser.add_argument("--q3", type=Path, default=None, help="Path to Quartalsmaster Q3 CSV (optional)")
-    parser.add_argument("--annual", type=Path, default=Path("B2B-Demandmaster_2026.csv"), help="Path to annual demand CSV")
+    parser.add_argument("--q1", type=Path, default=INPUT_DIR / "Quartalsmaster Q1.csv", help="Path to Quartalsmaster Q1 CSV")
+    parser.add_argument("--q2", type=Path, default=INPUT_DIR / "Quartalsmaster Q2.csv", help="Path to Quartalsmaster Q2 CSV")
+    parser.add_argument("--q3", type=Path, default=INPUT_DIR / "Quartalsmaster Q3.csv", help="Path to Quartalsmaster Q3 CSV (optional)")
+    parser.add_argument("--annual", type=Path, default=INPUT_DIR / "B2B-Demandmaster_2026.csv", help="Path to annual demand CSV")
     parser.add_argument("--out-dir", type=Path, default=Path("normalized_out"), help="Output directory")
     args = parser.parse_args()
 

@@ -1,0 +1,10 @@
+# build_summary.txt
+dim_initiative: 281
+dim_plan_item: 716
+dim_domain: 24
+dim_rock: 13
+dim_measure: 8
+fact_budget: 3996
+fact_domain_status: 444
+bridge_plan_item_epic: 711
+fact_initiative_period_priority: 476

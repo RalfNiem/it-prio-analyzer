@@ -2,20 +2,75 @@
   "out_dir": "out",
   "jira_db_path": "/Users/A763630/Library/CloudStorage/OneDrive-DeutscheTelekomAG/_Dokumente/GitHub/jira-loader/data/jira_issues.sqlite",
   "it_domains": [
-    "SFC", "CPQ", "SNO", "DTP", "API", "BAI", "DCI", "BIS", "BAS", "BOO", "BDA",
-    "B2B_ESSENTIALS", "BCT", "CLO", "ORCA", "TASS"
+    "SFC",
+    "CPQ",
+    "SNO",
+    "DTP",
+    "API",
+    "BAI",
+    "DCI",
+    "BIS",
+    "BAS",
+    "BOO",
+    "BDA",
+    "B2B_ESSENTIALS",
+    "BCT",
+    "CLO",
+    "ORCA",
+    "TASS"
   ],
   "aggregate_domains": [
-    {"domain_id": 100, "domain_name": "B2B Delivery gesamt", "domain_short": "B2B_DELIVERY_GESAMT"},
-    {"domain_id": 101, "domain_name": "B2B Delivery COE", "domain_short": "B2B_DELIVERY_COE"},
-    {"domain_id": 102, "domain_name": "Total w/o Data & ERP Trafo", "domain_short": "TOTAL_WO_DATA_ERP_TRAFO"},
-    {"domain_id": 103, "domain_name": "non-B2B Delivery ex O2C", "domain_short": "NON_B2B_DELIVERY_EX_O2C"},
-    {"domain_id": 200, "domain_name": "Summe (nur B2B-COEs) - validiert", "domain_short": "B2B_COE_VALIDATED"},
-    {"domain_id": 201, "domain_name": "Summe (nur O2C) - validiert", "domain_short": "O2C_VALIDATED"}
+    {
+      "domain_id": 100,
+      "domain_name": "B2B Delivery gesamt",
+      "domain_short": "B2B_DELIVERY_GESAMT"
+    },
+    {
+      "domain_id": 101,
+      "domain_name": "B2B Delivery COE",
+      "domain_short": "B2B_DELIVERY_COE"
+    },
+    {
+      "domain_id": 102,
+      "domain_name": "Total w/o Data & ERP Trafo",
+      "domain_short": "TOTAL_WO_DATA_ERP_TRAFO"
+    },
+    {
+      "domain_id": 103,
+      "domain_name": "non-B2B Delivery ex O2C",
+      "domain_short": "NON_B2B_DELIVERY_EX_O2C"
+    },
+    {
+      "domain_id": 200,
+      "domain_name": "Summe (nur B2B-COEs) - validiert",
+      "domain_short": "B2B_COE_VALIDATED"
+    },
+    {
+      "domain_id": 201,
+      "domain_name": "Summe (nur O2C) - validiert",
+      "domain_short": "O2C_VALIDATED"
+    }
   ],
   "validated_sums": {
-    "B2B_COE_VALIDATED": ["SFC", "CPQ", "SNO", "DTP", "API", "BAI", "DCI"],
-    "O2C_VALIDATED": ["BIS", "BAS", "BOO", "BDA", "BCT", "CLO", "ORCA", "TASS"]
+    "B2B_COE_VALIDATED": [
+      "SFC",
+      "CPQ",
+      "SNO",
+      "DTP",
+      "API",
+      "BAI",
+      "DCI",
+      "BIS",
+      "BAS",
+      "BOO",
+      "BDA"
+    ],
+    "O2C_VALIDATED": [
+      "BCT",
+      "CLO",
+      "ORCA",
+      "TASS"
+    ]
   },
   "calculated_differences": {
     "NON_B2B_DELIVERY_EX_O2C": {

@@ -1,2 +1,5 @@
 *.csv
 out/
+.venv/
+__pycache__/
+*.pyc
